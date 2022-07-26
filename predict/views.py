@@ -10,6 +10,7 @@ import nltk
 import imdb
 from bs4 import BeautifulSoup
 import requests
+from sqlalchemy import true
 nltk.download('stopwords')
 # Create your views here
 stopset = set(stopwords.words('english'))
@@ -19,8 +20,8 @@ with open('models/ectorizer.pickle', 'rb') as efile:
 model = joblib.load('models/svc.pkl')
 
 def index(request):
-    context={'a':1}
-    return render(request,'movie.html',context)
+    context={'a':1, 'results':0}
+    return render(request,'index.html',context)
 
 def sentiment(movie):
     global reviews
@@ -60,11 +61,11 @@ def recommend(movie):
     return l
         
 def predict(request):
-
     movie=request.POST['movie']
     movies=recommend(movie)
     sentiments=sentiment(movie)
-    return render(request,'movie.html',{"movies":movies,"sentiments":sentiments})
+    return render(request,'index.html',{"movies":movies,"sentiments":sentiments,'results':1})
+    # return render(request,'movie.html')
     
 
 

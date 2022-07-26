@@ -24,6 +24,6 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.index,name='homepage'),
-    path('predict', views.predict ,name='predict'),
+    path('predict/', views.predict ,name='predict'),
 ]
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

@@ -6,75 +6,142 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Movie Recommendation and Sentiment Analysis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body style="background-color: rgb(198, 76, 76);">
-    <!-- Navigation -->
-    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-        <div class="container">
-            <!-- Logo and responsive toggle -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbar">
-                    <ul class="nav navbar-nav">
-                        <li class="active">
-                            <a href="#">Home</a>
-                        </li>
-                        
-                    </ul>
-                
-                	<div class="logo">
-                        <img src="img/logo.png" alt="">
-                    </div>  
-                
+<body>
+    
+    <div class="container">
+        <div class="navbar">
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+            </ul>
+        </div>
+        {% if results %}
+        <div class="recommended-movies" style="padding-bottom: 5%;" >
+            <h1>What we Recommend!</h1>
+            <div class="flex flex-row sm: flex-row gap-2 pb-16">
+                {% for movie in movies %}
+                <div class = "h-auto w-1/5 bg-gradient-to-br from-pink-500 to-yellow-500 text-center rounded-xl hover:text-white text-xl py-10 px-5 font-bold ">{{movie}}</div>
+                {% endfor %} 
             </div>
-            
-        </div>
-        <!-- /.container -->
-    </nav>
-
-	<div class="jumbotron feature">
-        <div class="container">
-			<h1 align="center" style="color:rgb(255, 255, 255)"> Movie Recommendation System</h1>
-        </div>
-	</div>
-
-    <!-- Content -->
-
-    <div class="container_u">
-        
-        
-        <!-- Heading -->
-        <div class="row">
-            <div class="col-lg-12">
-              
-                <form method="POST" action="predict/">
-                    {% csrf_token %}
-                    <input type="text" name="movie">
-                    <input type="submit" name="submit">
-                </form>
+            <h1>Movie Review Sentiments</h1>
+            <div class="grid grid-cols-6 gap-2" style="margin-left:10% ;margin-right:10%;">
+                {% for key,value in sentiments.items %}
+                <div class = "col-span-5 w-auto h-15 text-l px-4 py-4 bg-gradient-to-br from-red-200 to-orange-200 rounded-xl hover:font-bold">{{ forloop.counter }}. {{key}}</div>
+                <div class = "w-auto h-15 text-2xl px-4 py-4 bg-gradient-to-br from-red-200 to-orange-200 rounded-xl">{{value}}</div>
+                {% endfor %} 
             </div>
         </div>
-                
-<div class="container_show" >
-<h1 align="center"style="color: rgb(223, 221, 217);">HERE IS WHAT WE RECOMMEND!</h1>
-<h2 align="center"style="color: rgb(223, 221, 217);">..........</h2>
-{% for movie in movies %}
-<h2 align="center"style="color: rgb(223, 221, 217);">{{movie}}</h2>
-{% endfor %} 
-</div>
 
-<div class="container_sentiment" >
-<h1 align="center"style="color: rgb(223, 221, 217);">REVIEWS ON YOUR MOVIE</h1>
-<h2 align="center"style="color: rgb(223, 221, 217);">..........</h2>
-{% for key,value in sentiments.items %}
-<h3 align="left"style="color: rgb(223, 221, 217); padding-left: 100px;">{{ forloop.counter }}. {{key}}{{value}}</h3>
 
-{% endfor %} 
- </div>
+        {% else %}
+        <div class="main-section">
+            <h1>Movie Recommendation & Sentiment Analysis</h1>
+            <form method="POST" action="predict/">
+                {% csrf_token %}
+                <p>Enter a Movie!</p>
+                <input type="text" name="movie">
+                <input type="submit" name="submit">
+            </form>
+        </div>
+        {% endif %}
+    </div> 
 </body>
+<style>
+
+    body { 
+        font-family: Arial, Helvetica, sans-serif;
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4)), url("{% static 'welcomePage.png' %}");
+        height: 100%;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+ 
+    .container{
+        text-align: center;
+    }
+    .navbar ul {
+        text-align:right;
+        list-style-type: none;
+        margin: 0;
+        padding: 20px 0px;
+    }
+
+    .navbar li{
+        display: inline;
+        padding-right: 25px;
+    }
+    
+    .navbar li a{
+        color: white;
+        text-decoration: none;
+    }
+    .navbar li a:hover{
+        color: rgb(255, 183, 59);
+        text-decoration: none;
+    }
+
+    .main-section{
+        margin-top: 5%;
+        background-color: #ffffffef;
+        margin-left: 15%;
+        margin-right: 15%;
+        height: max-content;
+        width: auto;
+        text-align: center;
+        border-radius: 20px;
+        padding: 5%;
+    }
+    .main-section h1{
+        color: #ffb451;
+        font-size: 250%;
+        font-weight: 900;
+        text-shadow: 2px 2px #171616ca;
+        padding-bottom: 5%;
+    }
+    form{
+        display: inline-block;
+        color: black;
+    }
+    input[type=text], select {
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        border: 1px solid #ccc;
+        text-align: center;
+        border-radius: 4px;
+        box-sizing: border-box;
+    }
+    input[type=submit] {
+        width: 50%;
+        background-color: #4CAF50;
+        color: white;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .recommended-movies
+    {
+        margin: 5% 10%;
+        height: max-content;
+        width: auto;
+        background-color: #ffffffef;
+        border-radius: 20px;
+        padding-left: 5%;
+        padding-right: 5%;
+        padding-top: 5%;
+    }
+    .recommended-movies h1{
+        color: rgb(0, 0, 0);
+        font-size: 250%;
+        text-align: center;
+        font-weight: 900;
+        padding-bottom: 5%;
+    }
+</style>
 </html>
